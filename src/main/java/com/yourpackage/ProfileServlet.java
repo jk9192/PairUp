@@ -1,0 +1,131 @@
+package com.yourpackage;
+
+import java.io.*;
+import java.sql.*;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+@WebServlet("/ProfileServlet")
+public class ProfileServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userEmail") == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String userEmail = (String) session.getAttribute("userEmail");
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pairup", "root", "root")) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            PreparedStatement psUser = con.prepareStatement("SELECT id, name, email FROM users WHERE email = ?");
+            psUser.setString(1, userEmail);
+            ResultSet rsUser = psUser.executeQuery();
+
+            if (rsUser.next()) {
+                int userId = rsUser.getInt("id");
+                request.setAttribute("userName", rsUser.getString("name"));
+                request.setAttribute("userEmail", rsUser.getString("email"));
+
+                PreparedStatement psProfile = con.prepareStatement("SELECT * FROM profile_characteristics WHERE user_id = ?");
+                psProfile.setInt(1, userId);
+                ResultSet rsProfile = psProfile.executeQuery();
+
+                if (rsProfile.next()) {
+                    request.setAttribute("current_focus", rsProfile.getString("current_focus"));
+                    request.setAttribute("skills", rsProfile.getString("skills"));
+                    request.setAttribute("bio", rsProfile.getString("bio"));
+                    request.setAttribute("profile_picture", rsProfile.getString("profile_picture"));
+                }
+
+                rsProfile.close();
+                psProfile.close();
+            }
+
+            rsUser.close();
+            psUser.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Decide which JSP to open
+        String mode = request.getParameter("mode");
+        if ("edit".equals(mode)) {
+            RequestDispatcher rd = request.getRequestDispatcher("edit_profile.jsp");
+            rd.forward(request, response);
+        } else {
+            RequestDispatcher rd = request.getRequestDispatcher("profile.jsp");
+            rd.forward(request, response);
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userEmail") == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String userEmail = (String) session.getAttribute("userEmail");
+
+        String currentFocus = request.getParameter("current_focus");
+        String skills = request.getParameter("skills");
+        String bio = request.getParameter("bio");
+        String profilePic = request.getParameter("profile_picture");
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pairup", "root", "root");
+
+            // Get user_id
+            PreparedStatement psUser = con.prepareStatement("SELECT id FROM users WHERE email = ?");
+            psUser.setString(1, userEmail);
+            ResultSet rsUser = psUser.executeQuery();
+
+            int userId = -1;
+            if (rsUser.next()) userId = rsUser.getInt("id");
+            rsUser.close();
+            psUser.close();
+
+            if (userId == -1) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO profile_characteristics (user_id, current_focus, skills, bio, profile_picture) " +
+                "VALUES (?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE current_focus=?, skills=?, bio=?, profile_picture=?"
+            );
+
+            ps.setInt(1, userId);
+            ps.setString(2, currentFocus);
+            ps.setString(3, skills);
+            ps.setString(4, bio);
+            ps.setString(5, profilePic);
+            ps.setString(6, currentFocus);
+            ps.setString(7, skills);
+            ps.setString(8, bio);
+            ps.setString(9, profilePic);
+            ps.executeUpdate();
+
+            ps.close();
+            con.close();
+
+            // ✅ Redirect back to ProfileServlet (GET)
+            response.sendRedirect("ProfileServlet?updated=true");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().println("Error: " + e.getMessage());
+        }
+    }
+}

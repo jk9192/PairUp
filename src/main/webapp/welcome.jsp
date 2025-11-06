@@ -14,6 +14,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+/>
+
 <meta charset="UTF-8">
 <title>WELCOME</title>
 <style>
@@ -26,7 +31,8 @@
     nav{
      background: #D8BFD8;
      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-     padding: 15px 40px;
+     height:45px;
+     padding: 0px 40px;
      display: flex;
      justify-content: space-between;
      align-items: center;
@@ -131,19 +137,28 @@
 ::placeholder {
   font-family: Comic Sans MS, Comic Sans, cursive;
 }
+.logo{
+  height: 40px;
+  width:auto;
+  object-fit: contain;
+   border-radius: 6px; 
+  }
 </style>
 </head>
 <body>
 
 <nav>
-  <div style="font-size:22px; font-weight:bold; color:#444;">PairUp 💻</div>
+  <img class ="logo" src="navlogo.png" alt="logo of pair up" >
    <div>
             <a href="welcome.jsp">Home</a>
+            <a href="search.jsp">Search <i class="fas fa-search"></i>
+            </a>
             <a href="ProfileServlet?mode=view">Profile</a>
             <a href="pairup.jsp">PairUp</a>
             <a href="groups.jsp">Groups</a>
             <a href="hacksearch.jsp">HackSearch</a>
             <a href="LogoutServlet" class="logout">Logout</a>
+            
         </div>
 </nav>
 

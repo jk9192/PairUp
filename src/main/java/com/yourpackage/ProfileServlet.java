@@ -42,6 +42,7 @@ public class ProfileServlet extends HttpServlet {
                     request.setAttribute("skills", rsProfile.getString("skills"));
                     request.setAttribute("bio", rsProfile.getString("bio"));
                     request.setAttribute("profile_picture", rsProfile.getString("profile_picture"));
+                    request.setAttribute("college", rsProfile.getString("college"));
                 }
 
                 rsProfile.close();
@@ -76,10 +77,16 @@ public class ProfileServlet extends HttpServlet {
 
         String userEmail = (String) session.getAttribute("userEmail");
 
-        String currentFocus = request.getParameter("current_focus");
-        String skills = request.getParameter("skills");
+        // ✅ Get multiple skills properly
+        String[] selectedSkills = request.getParameterValues("skills");
+        String skills = "";
+        if (selectedSkills != null) {
+            skills = String.join(",", selectedSkills);
+        }
+
         String bio = request.getParameter("bio");
         String profilePic = request.getParameter("profile_picture");
+        String college = request.getParameter("college");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -100,27 +107,29 @@ public class ProfileServlet extends HttpServlet {
                 return;
             }
 
+            // ✅ Insert OR Update Profile
             PreparedStatement ps = con.prepareStatement(
-                "INSERT INTO profile_characteristics (user_id, current_focus, skills, bio, profile_picture) " +
+                "INSERT INTO profile_characteristics (user_id, skills, bio, profile_picture, college) " +
                 "VALUES (?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE current_focus=?, skills=?, bio=?, profile_picture=?"
+                "ON DUPLICATE KEY UPDATE skills=?, bio=?, profile_picture=?, college=?"
             );
 
             ps.setInt(1, userId);
-            ps.setString(2, currentFocus);
-            ps.setString(3, skills);
-            ps.setString(4, bio);
-            ps.setString(5, profilePic);
-            ps.setString(6, currentFocus);
-            ps.setString(7, skills);
-            ps.setString(8, bio);
-            ps.setString(9, profilePic);
-            ps.executeUpdate();
+            ps.setString(2, skills);
+            ps.setString(3, bio);
+            ps.setString(4, profilePic);
+            ps.setString(5, college);
 
+            ps.setString(6, skills);
+            ps.setString(7, bio);
+            ps.setString(8, profilePic);
+            ps.setString(9, college);
+
+            ps.executeUpdate();
             ps.close();
             con.close();
 
-            // ✅ Redirect back to ProfileServlet (GET)
+            // Return to profile
             response.sendRedirect("ProfileServlet?updated=true");
 
         } catch (Exception e) {

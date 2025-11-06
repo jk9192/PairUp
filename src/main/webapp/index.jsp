@@ -3,6 +3,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+ <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+  />
 <meta charset="UTF-8">
 <title>PairUp</title>
 <style>
@@ -57,7 +61,7 @@ max-width:100%;
 </head>
 <body>
    <div class="container">
-   <img class="logo" src="logo.png" alt="Logo of PairUp">
+   <img class="logo" src="logo2.png" alt="Logo of PairUp">
    <h2>Find your perfect coding partner and grow together</h2>
    <a href="login.jsp" class="btn">Login</a>
    <a href="signup.jsp" class="btn" style="background:#28a745";>SignUp</a>

@@ -9,13 +9,13 @@
     }
 
     String userEmail = (String) session.getAttribute("userEmail");
-    String userName = "", currentFocus = "", skills = "", bio = "", profilePic = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+    String userName = "", currentFocus = "", skills = "", bio = "" ,college = "", profilePic = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pairup", "root", "root");
 
-        String query = "SELECT u.name, p.current_focus, p.skills, p.bio, p.profile_picture " +
+        String query = "SELECT u.name, p.current_focus, p.skills, p.bio, p.profile_picture,p.college " +
                        "FROM users u LEFT JOIN profile_characteristics p ON u.id = p.user_id WHERE u.email = ?";
         PreparedStatement ps = con.prepareStatement(query);
         ps.setString(1, userEmail);
@@ -27,6 +27,7 @@
             skills = rs.getString("skills") != null ? rs.getString("skills") : "";
             bio = rs.getString("bio") != null ? rs.getString("bio") : "";
             profilePic = rs.getString("profile_picture") != null ? rs.getString("profile_picture") : profilePic;
+            college = rs.getString("college") != null ? rs.getString("college") : "";
         }
 
         rs.close();
@@ -94,11 +95,33 @@
     <img src="<%= profilePic %>" class="profile-pic">
     <h2><%= userName %></h2>
     <p><b>Email:</b> <%= userEmail %></p>
-    <p><b>Current Focus:</b> <%= currentFocus.isEmpty() ? "Not set" : currentFocus %></p>
-    <p><b>Skills:</b> <%= skills.isEmpty() ? "Not added yet" : skills %></p>
-    <p><b>Bio:</b> <%= bio.isEmpty() ? "Write something about yourself!" : bio %></p>
+    <p><b>Skills:</b></p>
 
+<%
+    if(skills == null || skills.trim().equals("")) {
+%>
+    <p>Not added yet</p>
+<%
+    } else {
+        String[] skillList = skills.split(",");
+%>
+    <div style="margin-top:10px;">
+<%
+        for(String s : skillList) {
+%>
+        <span style="background:#D8BFD8; color:#333; padding:6px 12px; margin:5px; border-radius:15px; display:inline-block;">
+            <%= s.trim() %>
+        </span>
+<%
+        }
+    }
+%>
+
+    <p><b>Bio:</b> <%= bio.isEmpty() ? "Write something about yourself!" : bio %></p>
+	<p><b>College:</b> <%=college.isEmpty()? "Not Set!! ": college %></p>
     <!-- ✅ Fixed: Now sends mode=edit to servlet -->
+    
+    
     <form action="ProfileServlet" method="get">
         <input type="hidden" name="mode" value="edit">
         <button type="submit" class="edit-btn">Edit Profile</button>

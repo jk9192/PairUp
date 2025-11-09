@@ -41,6 +41,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <meta charset="UTF-8">
     <title>Profile</title>
     <style>
@@ -49,12 +55,15 @@
             background-color: #f8f9fa;
             margin: 0;
         }
-        nav {
-            background: #D8BFD8;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-        }
+        nav{
+     background: #D8BFD8;
+     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+     height:45px;
+     padding: 0px 40px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+    }
         nav a { text-decoration: none; color: #333; margin-right: 25px; }
         .logout { color: #e63946; font-weight: bold; }
         .container {
@@ -76,18 +85,36 @@
             cursor: pointer;
         }
         .edit-btn:hover { background-color: #0056b3; }
+          input, button {
+  font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+::placeholder {
+  font-family: Comic Sans MS, Comic Sans, cursive;
+}
+.logo{
+  height: 40px;
+  width:auto;
+  object-fit: contain;
+   border-radius: 6px; 
+  }
     </style>
 </head>
 <body>
 <nav>
-  <div style="font-size:22px; font-weight:bold; color:#444;">PairUp 💻</div>
+ <img class ="logo" src="navlogo.png" alt="logo of pair up" >
   <div>
     <a href="welcome.jsp">Home</a>
-    <a href="ProfileServlet?mode=edit">Edit Profile</a>
-    <a href="pairup.jsp">PairUp</a>
-    <a href="groups.jsp">Groups</a>
-    <a href="hacksearch.jsp">HackSearch</a>
-    <a href="LogoutServlet" class="logout">Logout</a>
+            <a href="search.jsp">Search <i class="fas fa-search"></i>
+            </a>
+            <a href="ProfileServlet?mode=view">Profile</a>
+            <a href="pairup.jsp">PairUp</a>
+            <a href="groups.jsp">Groups</a>
+            <a href="hacksearch.jsp">HackSearch</a>
+            <a href="notifications.jsp"><i class="fa-solid fa-bell" style="font-size:20px; cursor:pointer;"></i>
+</a>
+            <a href="LogoutServlet" class="logout">Logout</a>
+            
   </div>
 </nav>
 

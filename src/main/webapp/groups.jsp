@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 <meta charset="UTF-8">
-<title>WELCOME</title>
+<title>Groups</title>
 <style>
   body {
         margin: 0;
@@ -164,42 +164,3 @@
             
         </div>
 </nav>
-
-
-
-  <%
-    String userName = (String) session.getAttribute("userName");
-%>
-
-<div class="container">
-
-    <div class="welcome">
-        Welcome back, <%= userName != null ? userName : "User" %> 👋
-    </div>
-
-    <!-- POST INPUT BOX -->
-    <div class="post-box">
-        <form action="PostServlet" method="post" style="display:flex; width:100%; justify-content:center;">
-            <input type="text" name="content" class="post-input" placeholder="Share your progress or thoughts..." required>
-            <button type="submit" class="post-btn">Post</button>
-        </form>
-    </div>
-
-    <!-- POSTS FEED -->
-    <div class="posts">
-        
-    </div>
-
-</div>
-
-        
-
-
-
-
-
-
-
-
-</body>
-</html>

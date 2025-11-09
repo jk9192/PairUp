@@ -20,6 +20,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <meta charset="UTF-8">
 <title>Search</title>
 <link
@@ -191,6 +193,9 @@ input, button {
 </head>
 
 <body>
+
+
+
 <nav>
   <img class="logo" src="navlogo.png" alt="logo of pair up">
   <div>
@@ -200,9 +205,14 @@ input, button {
     <a href="pairup.jsp">PairUp</a>
     <a href="groups.jsp">Groups</a>
     <a href="hacksearch.jsp">HackSearch</a>
+    <a href="notifications.jsp"><i class="fa-solid fa-bell" style="font-size:20px; cursor:pointer;"></i>
+</a>
     <a href="LogoutServlet" class="logout">Logout</a>
   </div>
 </nav>
+
+
+
 
 <div class="search-bar">
   <form method="get" action="SearchServlet">
@@ -211,16 +221,20 @@ input, button {
   </form>
 </div>
 
+
+
+
 <div class="container">
 <%
 String searchQuery = (String) request.getAttribute("searchQuery");
 List<Map<String, String>> profiles = (List<Map<String, String>>) request.getAttribute("profiles");
+
 if (profiles != null && !profiles.isEmpty()) {
     for (Map<String, String> user : profiles) {
 %>
 
   <div class="profile-card">
-    <img src="<%= user.get("profile_pic") != null ? user.get("profile_pic") : "defaultpic.png" %>" alt="Profile Picture">
+    <img src="<%= user.get("profile_picture") != null ? user.get("profile_picture") : "defaultpic.png" %>" alt="Profile Picture">
     <h3><%= user.get("username") %></h3>
     <p><strong>College:</strong> <%= user.get("college") %></p>
     <p><strong>Skills:</strong> <%= user.get("skills") %></p>
@@ -231,15 +245,49 @@ if (profiles != null && !profiles.isEmpty()) {
         <button type="submit" class="view-btn">View Profile</button>
       </form>
 
-      <form action="SendPairRequestServlet" method="post">
-        <input type="hidden" name="receiverId" value="<%= user.get("user_id") %>">
+
+
+	 
+	   <%
+    String pairStatus = user.get("pair_status");
+    if ("none".equals(pairStatus)) {
+	   %>
+	   
+	   
+	  <form action="PairRequestServlet" method="post">
+        <input type="hidden" name="receiverProfileId" value="<%= user.get("profile_id") %>">
         <button type="submit" class="pair-btn">Send Pair Request</button>
-      </form>
+    </form>
+    
+    <%
+    } 
+    
+    
+    else if ("pending".equalsIgnoreCase(pairStatus)) {
+%>
+    <button class="pair-btn" disabled>Request Sent</button>
+<%
+    } else if ("accepted".equalsIgnoreCase(pairStatus)) {
+%>
+    <button class="pair-btn" disabled>Paired ✔</button>
+<%
+    } else if ("rejected".equalsIgnoreCase(pairStatus)) {
+%>
+
+<form action="PairRequestServlet" method="post">
+        <input type="hidden" name="receiverProfileId" value="<%= user.get("profile_id") %>">
+        <button type="submit" class="pair-btn">Send Again</button>
+    </form>
+<%
+    }
+%>
     </div>
   </div>
 
 <%
     }
+    
+    
 } else if (searchQuery != null) {
 %>
   <p>No results found for "<%= searchQuery %>".</p>

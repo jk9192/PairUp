@@ -55,7 +55,7 @@ if (profileData == null) {
   <div>
     <a href="welcome.jsp">Home</a>
     <a href="ProfileServlet?mode=edit">Edit Profile</a>
-    <a href="pairup.jsp">PairUp</a>
+    <a href="MyPairsServlet">PairUp</a>
     <a href="groups.jsp">Groups</a>
     <a href="hacksearch.jsp">HackSearch</a>
     <a href="LogoutServlet" class="logout">Logout</a>

@@ -235,13 +235,13 @@ margin:12px;}
 <body>
 
 <nav>
-  <img class ="logo" src="navlogo.png" alt="logo of pair up" >
+  <img class ="logo" src="hackSearch.JPG" alt="logo of pair up" >
    <div>
             <a href="welcome.jsp">Home</a>
             <a href="search.jsp">Search <i class="fas fa-search"></i>
             </a>
             <a href="ProfileServlet?mode=view">Profile</a>
-            <a href="pairup.jsp">PairUp</a>
+            <a href="MyPairsServlet">PairUp</a>
             <a href="groups.jsp">Groups</a>
             <a href="hacksearch.jsp">HackSearch</a>
             <a href="notifications.jsp"><i class="fa-solid fa-bell" style="font-size:20px; cursor:pointer;"></i>
